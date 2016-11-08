@@ -38,19 +38,36 @@ public class WaifuCustomizationEditor : EditorWindow {
     {
         waifuVars = (WaifuCustomizationVars)AssetDatabase.LoadAssetAtPath("Assets/Resources/WaifuVarsInstance.asset", typeof(WaifuCustomizationVars));
     }
+    void SaveData()
+    {
+        EditorApplication.SaveAssets();
+        AssetDatabase.SaveAssets();
+    }
     void OnGUI()
     {
         if (waifuVars != null)
         {
             waifuVars.resourceFolderPostion = EditorGUILayout.TextField("Graphics Folder Positon:",waifuVars.resourceFolderPostion);
             if (GUILayout.Button("Grab Graphics"))
+            {
                 waifuVars.GrabGraphics();
+                waifuVars.ApplyVariables();
+                SaveData();
+            }
+            if(FindObjectOfType<CustomizationMenuManager>().placementPostions.Count<=0f)
+            {
+                if (GUILayout.Button("Find Placement Positions"))
+                    FindObjectOfType<CustomizationMenuManager>().GrabPlacementPositions();
+            }
         }
         else
         {
             GUILayout.Label("WaifuVars is missing!");
             if (GUILayout.Button("Try and load Waifu Vars Instance"))
+            {
                 LoadData();
+                SaveData();
+            }
         }
     }
     public void ListIterator(string propertyPath, ref bool visible, SerializedObject serializedObject, GUIStyle style, string title,string type)

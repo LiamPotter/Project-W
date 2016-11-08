@@ -19,8 +19,29 @@ public class TabVariables : MonoBehaviour {
     
     private int amountOfLines;
 
-	void Start ()
+    //public enum ObjectType
+    //{
+    //    Hair,
+    //    Eye,
+    //    Mouth,
+    //    Face,
+    //    Top
+    //}
+
+    public ButtonController.ObjectType thisType;
+
+    void Start ()
     {
+        if (name.Contains("Hair"))
+            thisType = ButtonController.ObjectType.Hair;
+        if (name.Contains("Eye"))
+            thisType = ButtonController.ObjectType.Eye;
+        if (name.Contains("Mouth"))
+            thisType = ButtonController.ObjectType.Mouth;
+        if (name.Contains("Face"))
+            thisType = ButtonController.ObjectType.Face;
+        if (name.Contains("Top"))
+            thisType = ButtonController.ObjectType.Top;
         cMenuManager = FindObjectOfType<CustomizationMenuManager>();
         buttonHolder = holderObject.transform.FindChild("ButtonHolder").gameObject;
     }
@@ -30,22 +51,7 @@ public class TabVariables : MonoBehaviour {
             if (!doneStart)
                 RunStart();
     }
-    private float IfOverForY(int i,int greaterThan, float returnFloat)
-    {
-        if (i > greaterThan)
-        {
-            return returnFloat;
-        }
-        else return 0f;
-    }
-    private float IfOverForX(int i,int greaterThan,float returnFloat)
-    {
-        if (i > greaterThan)
-        {
-            return returnFloat;
-        }
-        else return 0f;
-    }
+  
     public void TurnOff()
     {
         holderObject.SetActive(false);
@@ -57,20 +63,20 @@ public class TabVariables : MonoBehaviour {
     private void RunStart()
     {
       
-        amountOfLines = possibleSelections.Count / (int)cMenuManager.amountPerRow;
-        if (possibleSelections.Count % cMenuManager.amountPerRow > 0)
-            amountOfLines++;
+        //amountOfLines = possibleSelections.Count / (int)cMenuManager.amountPerRow;
+        //if (possibleSelections.Count % cMenuManager.amountPerRow > 0)
+        //    amountOfLines++;
         buttonHolder.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cMenuManager.buttonPrefab.targetGraphic.rectTransform.rect.width, cMenuManager.buttonPrefab.targetGraphic.rectTransform.rect.height);
         for (int i = 0; i < possibleSelections.Count; i++)
         {
-          
-               // if (relatedButtons.Count < possibleSelections.Count)
             relatedButtons.Add((Button)Instantiate(cMenuManager.buttonPrefab, new Vector3(
                 cMenuManager.customizationPanel.transform.position.x,
                 cMenuManager.customizationPanel.transform.position.y,
                 cMenuManager.customizationPanel.transform.position.z),
                 cMenuManager.customizationPanel.transform.rotation,
                 buttonHolder.transform));
+            relatedButtons[i].GetComponent<ButtonController>().thisType = thisType;
+            relatedButtons[i].GetComponent<ButtonController>().relatedObject = possibleSelections[i];
         }
         doneStart = true;
     }
