@@ -14,6 +14,8 @@ public class CustomizationMenuManager : MonoBehaviour {
 
     public State currentState;
 
+    
+
     public GameObject customizationPanel;
 
     private List<Button> tabs = new List<Button>();
@@ -23,6 +25,8 @@ public class CustomizationMenuManager : MonoBehaviour {
     public Button activeButton;
 
     public Button buttonPrefab;
+
+    public Transform headTransform, chestTransform, bellyTransform;
 
     public List<Transform> placementPostions;
 
@@ -54,7 +58,6 @@ public class CustomizationMenuManager : MonoBehaviour {
         doneStart = true;
         Load(true);
     }
-	
 	void Update ()
     {
         switch (currentState)
@@ -85,8 +88,11 @@ public class CustomizationMenuManager : MonoBehaviour {
     }
     public void ApplyActiveButton(Button toUse)
     {
-        SetActiveButton(toUse);
-        toUse.interactable = false;
+        if (toUse.interactable)
+        {
+            SetActiveButton(toUse);
+            toUse.interactable = false;
+        }
     }
     public void GrabPlacementPositions()
     {
@@ -108,15 +114,15 @@ public class CustomizationMenuManager : MonoBehaviour {
             playerCVariables = ScriptableObject.CreateInstance<PlayerCustomizationVariables>();
             UnityEditor.AssetDatabase.CreateAsset(playerCVariables, "Assets/Resources/PlayerCustomization.asset");
             }
-        if (currentEye != null)
+        if (currentEye != null&&playerCVariables.eyes!=currentEye.GetComponent<CustomizationObjectVariables>().prefabReference)
             playerCVariables.eyes = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GetAssetPath(currentEye.GetComponent<CustomizationObjectVariables>().prefabReference));
-        if (currentHair != null)
+        if (currentHair != null&&playerCVariables.hair!=currentHair.GetComponent<CustomizationObjectVariables>().prefabReference)
             playerCVariables.hair = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GetAssetPath(currentHair.GetComponent<CustomizationObjectVariables>().prefabReference));
-        if (currentFace != null)
+        if (currentFace != null && playerCVariables.face != currentFace.GetComponent<CustomizationObjectVariables>().prefabReference)
             playerCVariables.face = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GetAssetPath(currentFace.GetComponent<CustomizationObjectVariables>().prefabReference));
-        if (currentMouth != null)
+        if (currentMouth != null && playerCVariables.mouth != currentMouth.GetComponent<CustomizationObjectVariables>().prefabReference)
             playerCVariables.mouth = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GetAssetPath(currentMouth.GetComponent<CustomizationObjectVariables>().prefabReference));
-        if (currentTop != null)
+        if (currentTop != null && playerCVariables.top != currentTop.GetComponent<CustomizationObjectVariables>().prefabReference)
             playerCVariables.top = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(UnityEditor.AssetDatabase.GetAssetPath(currentTop.GetComponent<CustomizationObjectVariables>().prefabReference));
         UnityEditor.AssetDatabase.SaveAssets();
         currentState = State.Closed;

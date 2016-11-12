@@ -48,6 +48,7 @@ public class WaifuCustomizationEditor : EditorWindow {
         if (waifuVars != null)
         {
             waifuVars.resourceFolderPostion = EditorGUILayout.TextField("Graphics Folder Positon:",waifuVars.resourceFolderPostion);
+            waifuVars.amountOfValues = EditorGUILayout.IntField("Amout Of Values", waifuVars.amountOfValues);
             if (GUILayout.Button("Grab Graphics"))
             {
                 waifuVars.GrabGraphics();

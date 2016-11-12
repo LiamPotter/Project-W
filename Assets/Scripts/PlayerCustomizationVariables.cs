@@ -13,4 +13,9 @@ public class PlayerCustomizationVariables : ScriptableObject {
 
     public GameObject top;
 
+    public Vector3 headScale;
+
+    public Vector3 chestScale;
+
+    public Vector3 bellyScale;
 }

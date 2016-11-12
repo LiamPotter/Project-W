@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class TabVariables : MonoBehaviour {
 
+
     private CustomizationMenuManager cMenuManager;
 
     public GameObject holderObject;
@@ -12,6 +13,8 @@ public class TabVariables : MonoBehaviour {
     private GameObject buttonHolder;
 
     public List<GameObject> possibleSelections = new List<GameObject>();
+
+    public List<float> possibleValues = new List<float>();
 
     private List<Button> relatedButtons = new List<Button>();
 
@@ -42,6 +45,8 @@ public class TabVariables : MonoBehaviour {
             thisType = ButtonController.ObjectType.Face;
         if (name.Contains("Top"))
             thisType = ButtonController.ObjectType.Top;
+        if (name.Contains("Slider"))
+            thisType = ButtonController.ObjectType.Value;
         cMenuManager = FindObjectOfType<CustomizationMenuManager>();
         buttonHolder = holderObject.transform.FindChild("ButtonHolder").gameObject;
     }

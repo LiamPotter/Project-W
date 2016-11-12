@@ -10,7 +10,8 @@ public class WaifuCustomizationVars : ScriptableObject {
     public List<GameObject> faceList = new List<GameObject>();
     public List<GameObject> mouthList = new List<GameObject>();
     public List<GameObject> topList = new List<GameObject>();
-
+    public List<float> valueList = new List<float>();
+    public int amountOfValues;
     public string resourceFolderPostion;
 
 
@@ -21,6 +22,7 @@ public class WaifuCustomizationVars : ScriptableObject {
         FillList(faceList, "Faces", "Face");
         FillList(mouthList, "Mouths", "Mouth");
         FillList(topList, "Tops", "Top");
+    
     }
     public void ApplyVariables()
     {
@@ -29,6 +31,8 @@ public class WaifuCustomizationVars : ScriptableObject {
         ApplyToButton("Face", faceList);
         ApplyToButton("Mouth", mouthList);
         ApplyToButton("Top", topList);
+        valueList.Capacity = amountOfValues;
+        ApplyToButton("Slider", valueList);
     }
     private void ApplyToButton(string assetString,List<GameObject> tList)
     {
@@ -38,6 +42,19 @@ public class WaifuCustomizationVars : ScriptableObject {
             {
                 tVariables.possibleSelections.Clear();
                 tVariables.possibleSelections = tList;
+            }
+        }
+    }
+    private void ApplyToButton(string assetString, List<float> tList)
+    {
+        foreach (TabVariables tVariables in FindObjectsOfType<TabVariables>())
+        {
+            if (tVariables.holderObject.name.Contains(assetString))
+            {
+                tVariables.possibleSelections.Clear();
+                tVariables.possibleValues.Clear();
+                tVariables.possibleValues = tList;
+                //tVariables.possibleValues.Capacity = amountOfValues;
             }
         }
     }

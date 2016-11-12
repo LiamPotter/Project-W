@@ -12,7 +12,8 @@ public class ButtonController : MonoBehaviour {
         Eye,
         Mouth,
         Face,
-        Top
+        Top,
+        Value
     }
 
     public ObjectType thisType;
@@ -63,6 +64,9 @@ public class ButtonController : MonoBehaviour {
                         toSpawnPosition = cMenuManager.placementPostions[i];
                         cMenuManager.currentTop=CreateRelated(cMenuManager.currentTop, toSpawnPosition);
                     }
+                    break;
+                case ObjectType.Value:
+
                     break;
                 default:
                     Debug.Log("You've fucked something up.");
