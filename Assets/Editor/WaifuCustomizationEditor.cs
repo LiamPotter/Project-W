@@ -55,11 +55,11 @@ public class WaifuCustomizationEditor : EditorWindow {
                 waifuVars.ApplyVariables();
                 SaveData();
             }
-            if(FindObjectOfType<CustomizationMenuManager>().placementPostions.Count<=0f)
-            {
-                if (GUILayout.Button("Find Placement Positions"))
-                    FindObjectOfType<CustomizationMenuManager>().GrabPlacementPositions();
-            }
+            //if(FindObjectOfType<CustomizationMenuManager>().placementPostions.Count<=0f)
+            //{
+            //    if (GUILayout.Button("Find Placement Positions"))
+            //        FindObjectOfType<CustomizationMenuManager>().GrabPlacementPositions();
+            //}
         }
         else
         {

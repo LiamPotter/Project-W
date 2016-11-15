@@ -1,0 +1,231 @@
+fileFormatVersion: 2
+guid: 486d3a00737bda14994998d35ac11fde
+timeCreated: 1479189073
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Chin
+    100004: Cube
+    100006: //RootNode
+    100008: Foot.L
+    100010: Foot.L_end
+    100012: Foot.R
+    100014: Foot.R_end
+    100016: FootIK.L
+    100018: FootIK.L_end
+    100020: FootIK.R
+    100022: FootIK.R_end
+    100024: ForeArm.L
+    100026: ForeArm.L_end
+    100028: ForeArm.R
+    100030: ForeArm.R_end
+    100032: Head
+    100034: Head_end
+    100036: Hips
+    100038: Knee.L
+    100040: Knee.L_end
+    100042: Knee.R
+    100044: Knee.R_end
+    100046: LowerLeg.L
+    100048: LowerLeg.R
+    100050: Root
+    100052: Spine_01
+    100054: Spine_02
+    100056: UpperArm.L
+    100058: UpperArm.R
+    100060: UpperLeg.L
+    100062: UpperLeg.R
+    400000: Armature
+    400002: Chin
+    400004: Cube
+    400006: //RootNode
+    400008: Foot.L
+    400010: Foot.L_end
+    400012: Foot.R
+    400014: Foot.R_end
+    400016: FootIK.L
+    400018: FootIK.L_end
+    400020: FootIK.R
+    400022: FootIK.R_end
+    400024: ForeArm.L
+    400026: ForeArm.L_end
+    400028: ForeArm.R
+    400030: ForeArm.R_end
+    400032: Head
+    400034: Head_end
+    400036: Hips
+    400038: Knee.L
+    400040: Knee.L_end
+    400042: Knee.R
+    400044: Knee.R_end
+    400046: LowerLeg.L
+    400048: LowerLeg.R
+    400050: Root
+    400052: Spine_01
+    400054: Spine_02
+    400056: UpperArm.L
+    400058: UpperArm.R
+    400060: UpperLeg.L
+    400062: UpperLeg.R
+    4300000: Cube
+    7400000: Armature|DefaultPose
+    9500000: //RootNode
+    13700000: Cube
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|DefaultPose
+      takeName: Armature|DefaultPose
+      firstFrame: 0
+      lastFrame: 99
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Root
+        weight: 1
+      - path: Armature/Root/FootIK.L
+        weight: 1
+      - path: Armature/Root/FootIK.L/FootIK.L_end
+        weight: 1
+      - path: Armature/Root/FootIK.R
+        weight: 1
+      - path: Armature/Root/FootIK.R/FootIK.R_end
+        weight: 1
+      - path: Armature/Root/Hips
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/Chin
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/Chin/Head
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/Chin/Head/Head_end
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/UpperArm.L
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/UpperArm.L/ForeArm.L
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/UpperArm.L/ForeArm.L/ForeArm.L_end
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/UpperArm.R
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/UpperArm.R/ForeArm.R
+        weight: 1
+      - path: Armature/Root/Hips/Spine_01/Spine_02/UpperArm.R/ForeArm.R/ForeArm.R_end
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.L
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Foot.L_end
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.R
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R
+        weight: 1
+      - path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Foot.R_end
+        weight: 1
+      - path: Armature/Root/Knee.L
+        weight: 1
+      - path: Armature/Root/Knee.L/Knee.L_end
+        weight: 1
+      - path: Armature/Root/Knee.R
+        weight: 1
+      - path: Armature/Root/Knee.R/Knee.R_end
+        weight: 1
+      - path: Cube
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEditor;
 
-public class CZ_EditorInterface : EditorWindow {
+public class CZ_CharacterEditorInterface : EditorWindow {
 
     public CZ_Creator creatorInstance;
 
@@ -17,12 +17,12 @@ public class CZ_EditorInterface : EditorWindow {
     private GUIStyle titleStyle = new GUIStyle();
 
 
-    [MenuItem("Customization/Interface")]
+    [MenuItem("Customization/Character Interface")]
     public static void ShowWindow()
     {
         //Show existing window instance. If one doesn't exist, make one.
-        GetWindow(typeof(CZ_EditorInterface));
-        GetWindow(typeof(CZ_EditorInterface)).minSize = new Vector2(200, 300);
+        GetWindow(typeof(CZ_CharacterEditorInterface));
+        GetWindow(typeof(CZ_CharacterEditorInterface)).minSize = new Vector2(200, 300);
 
     }
 
@@ -34,14 +34,20 @@ public class CZ_EditorInterface : EditorWindow {
         titleStyle.padding.top = 5;
         titleStyle.padding.bottom = 5;
         titleStyle.alignment = TextAnchor.UpperCenter;
-        titleContent = new GUIContent("Customization");
+        titleContent = new GUIContent("Characters");
         creatorInstance = CreateInstance<CZ_Creator>();
         aquireInstance = CreateInstance<CZ_Aquire>();
         //Find_Character();
     }
+    public void OnDisable()
+    {
+
+        AssetDatabase.SaveAssets();
+        //Find_Character();
+    }
     void OnGUI()
     {
-       
+        GUILayout.Label("Character Editor", titleStyle);
         if (characterInstance == null)
         {
             if (GUILayout.Button("Find Character"))
@@ -71,13 +77,15 @@ public class CZ_EditorInterface : EditorWindow {
         }
         else
         {
-        
             GUILayout.Label("Currently viewing " + characterInstance.characterName, titleStyle);
             EditorGUILayout.Separator();
             characterInstance.baseModel = (GameObject)EditorGUILayout.ObjectField("Base Model",characterInstance.baseModel, typeof(GameObject),false);
             EditorGUILayout.Space();
+
             #region Variables
-            Rect leftRect = new Rect(0, 60, Screen.width / 2-5, Screen.height);
+
+            #region Left Rect
+            Rect leftRect = new Rect(0, 100, Screen.width / 2-5, Screen.height);
             GUIStyle leftStyle = new GUIStyle();
             Texture2D leftTexture = new Texture2D((int)leftRect.width, (int)leftRect.height);
             Color[] leftColors = new Color[1];
@@ -89,24 +97,22 @@ public class CZ_EditorInterface : EditorWindow {
             GUILayout.Label("Variables", titleStyle);
             if(GUILayout.Button("Find Variables"))
             {
-                string entirePath = EditorUtility.OpenFolderPanel("Variables Folder", "/Assets/Resources/Customization/Variables/", "");
-                string relativepath = "Assets" + entirePath.Substring(Application.dataPath.Length);
-                aquireInstance.foldersToSearch.Add(relativepath);
+                //string entirePath = EditorUtility.OpenFolderPanel("Variables Folder", "/Assets/Resources/Customization/Variables/", "");
+                //string relativepath = "Assets" + entirePath.Substring(Application.dataPath.Length);
+                //aquireInstance.foldersToSearch.Add(relativepath);
+                aquireInstance.folderToSearch = "Assets/Resources/Customization/Variables/";
                 aquireInstance.Aquire_Variables();
             }
             if(GUILayout.Button("Create New Variable"))
             {
-                creatorInstance.Create_Variable();
+                CZ_VariableEditorInterface.ShowWindow();
             }
-            if(creatorInstance.creating)
-            {
-
-            }
-
+         
             GUILayout.EndArea();
             #endregion
-            #region
-            Rect rightRect = new Rect(Screen.width / 2 + 5, 60, Screen.width / 2, Screen.height);
+
+            #region Right Rect
+            Rect rightRect = new Rect(Screen.width / 2 + 5, 100, Screen.width / 2, Screen.height);
             GUIStyle rightStyle = new GUIStyle();
             Texture2D rightTexture = new Texture2D((int)rightRect.width, (int)rightRect.height);
             Color[] rightColors = new Color[1];
@@ -118,8 +124,15 @@ public class CZ_EditorInterface : EditorWindow {
             GUILayout.Label("Sections", titleStyle);
             GUILayout.EndArea();
             #endregion
+
+            if (creatorInstance.creating)
+            {
+
+            }
+            #endregion
         }
     }
+
     private void Name_Character()
     {
         characterName=EditorGUILayout.TextField("Character Name", characterName);
@@ -134,16 +147,8 @@ public class CZ_EditorInterface : EditorWindow {
     }
     private void Find_Character()
     {
-        string path = "Assets/Resources/Customization/Characters/";
-        string[] filters = new string[2];
-        filters[0] = "Asset Files";
-        filters[0] = "asset";
-        string fileLocation = EditorUtility.OpenFilePanelWithFilters("Load Character", path,filters);
-        string relativepath = "Assets" + fileLocation.Substring(Application.dataPath.Length);
-        //Debug.Log(relativepath);
-        characterInstance = (CZ_Character)AssetDatabase.LoadAssetAtPath(relativepath, typeof(CZ_Character));
-        aquireInstance.characterInstance = characterInstance;
-        creatorInstance.characterInstance = characterInstance;
+        aquireInstance.Find_Character(creatorInstance, characterInstance);
+        characterInstance = aquireInstance.characterInstance;
     }
 
     public void ListIterator(string propertyPath, ref bool visible, SerializedObject serializedObject, GUIStyle style, string title, string type)

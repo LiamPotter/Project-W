@@ -14,9 +14,10 @@ public class CZ_Creator : ScriptableObject {
     public bool creating;
 
 
-    public void Create_Variable()
+    public void Create_Variable(CZ_Variable variable)
     {
-
+        string path = "Assets/Resources/Customization/Variables/" + variable.variableName + ".asset";
+        UnityEditor.AssetDatabase.CreateAsset(variable, path);
     }
 
     public void Create_Section()
