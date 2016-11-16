@@ -18,7 +18,13 @@ public class CZ_VariableEditorInterface : EditorWindow
     SerializedProperty serProperty;
     bool listVisible = true;
 
+    private Rect extraInfoRect;
+
+    private bool showingExtraInfo;
+
     public bool makingVariable;
+
+    public bool editingVariable;
 
     private CZ_Variable tempVariable;
 
@@ -41,6 +47,11 @@ public class CZ_VariableEditorInterface : EditorWindow
     public void OnEnable()
     {
         listVisible = true;
+
+        editingVariable = false;
+
+        showingExtraInfo = false;
+
         #region TitleStyle
         titleStyle.fontStyle = FontStyle.Bold;
         titleStyle.fontSize = 15;
@@ -68,36 +79,55 @@ public class CZ_VariableEditorInterface : EditorWindow
         errorStyle.hover.textColor = Color.red;
         errorStyle.focused.textColor = Color.red;
         #endregion
+      
         creatorInstance = CreateInstance<CZ_Creator>();
         aquireInstance = CreateInstance<CZ_Aquire>();
         VariableEditorInterface = this;
-        if(serializedVarObj==null)
-        {
-            serializedVarObj = new SerializedObject(aquireInstance);
-        }
+        serializedVarObj = new SerializedObject(aquireInstance);
         aquireInstance.foldersToSearch.Clear();
         aquireInstance.folderToSearch = "Assets/Resources/Customization/Variables";
+        
     }
 
     void OnGUI()
     {
-
+        //Debug.Log(showingExtraInfo);
         GUILayout.Label("Variable Editor", titleStyle);
-
-        if (!makingVariable)
+        extraInfoRect = new Rect((Screen.width / 3) + (Screen.width / 3), 52, Screen.width / 3, 20);
+        if (!makingVariable&& !editingVariable)
         {
+           
             if (GUILayout.Button("Create New Variable"))
             {
                 tempVariable = CreateInstance<CZ_Variable>();
                 makingVariable = !makingVariable;
             }
             aquireInstance.FillVariableList(aquireInstance.variables, "t:CZ_Variable", "");
-            serializedVarObj = new SerializedObject(aquireInstance);
-            GUILayout.Label("Variable Amount: " + aquireInstance.variables.Count);
+            serializedVarObj = new SerializedObject(aquireInstance); 
             ListIterator("variables", ref listVisible, serializedVarObj, subTitleStyle, style0, "Variables", "");
+            if (!showingExtraInfo)
+            {
+                if (GUI.Button(extraInfoRect, "Show Extra Info"))
+                {
+                    showingExtraInfo = true;
+                }
+            }
+            else
+            {
+                if(GUI.Button(extraInfoRect,"Hide Extra Info"))
+                {
+                    showingExtraInfo = false;
+                }
+            }
         }
         else
         {
+            if(tempVariable==null)
+            {
+                makingVariable = false;
+                editingVariable = false;
+                return;
+            }
             tempVariable.variableName = EditorGUILayout.TextField("Variable Name: ", tempVariable.variableName);
             tempVariable.variableType = (CZ_Variable.VarType)EditorGUILayout.EnumPopup("Variable Type: ",tempVariable.variableType);
             if(tempVariable.variableType==CZ_Variable.VarType.Creation)
@@ -127,15 +157,31 @@ public class CZ_VariableEditorInterface : EditorWindow
                     return;
                 }
             }
-            if(GUILayout.Button("Create!"))
+            if (editingVariable)
             {
-                creatorInstance.Create_Variable(tempVariable);
-                makingVariable = !makingVariable;
+                if(GUILayout.Button("Save!"))
+                {
+                    AssetDatabase.SaveAssets();
+                    //makingVariable = false;
+                    editingVariable = false;
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Create!"))
+                {
+                    creatorInstance.Create_Variable(tempVariable);
+                    makingVariable = !makingVariable;
+                }
             }
             if(GUILayout.Button("Cancel"))
             {
                 tempVariable = null;
-                makingVariable = !makingVariable;
+                if(editingVariable)
+                    editingVariable = false;
+                if(makingVariable)
+                    makingVariable = false;
+                //editingVariable = false;
             }
         }
   
@@ -149,7 +195,7 @@ public class CZ_VariableEditorInterface : EditorWindow
     private void ListIterator(string propertyPath, ref bool visible, SerializedObject serializedObject,GUIStyle titleStyle, GUIStyle style, string title, string type)
     {
         SerializedProperty listProperty = serializedObject.FindProperty(propertyPath);
-        visible = EditorGUILayout.Foldout(visible, title, titleStyle);
+        //visible = EditorGUILayout.Foldout(visible, title, titleStyle);
         if (visible)
         {
             EditorGUI.indentLevel++;
@@ -161,27 +207,69 @@ public class CZ_VariableEditorInterface : EditorWindow
                 //Rect drawZone = GUILayoutUtility.GetRect(0f, 16f);
                 GUIContent contentP = new GUIContent();
                 GUIStyle gStyle = new GUIStyle();
+                GUIStyle eStyle = new GUIStyle();
                 gStyle.fontSize = style.fontSize;
-                contentP.text = type + i + ": ";
-                //contentP.tooltip = "Place any scene in this field. NOTE: Will not accept anything but SceneAssets.";
                 gStyle.normal.textColor = style.normal.textColor;
-                float minW;
-                float maxW;
-                gStyle.CalcMinMaxWidth(contentP, out minW, out maxW);
-                gStyle.margin.right = 0;
-                gStyle.margin.left = 0;
-                gStyle.margin.top = 0;
-                gStyle.margin.bottom = 2;
-                //EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(contentP, gStyle);
-                //EditorGUILayout.Space();
-                EditorGUI.indentLevel++;
+             
+                GUIContent tContent = new GUIContent();
+             
 
-                bool showChildren = EditorGUILayout.PropertyField(elementProperty, GUIContent.none);
-                EditorGUI.indentLevel--;
-                //EditorGUILayout.EndHorizontal();
+                tContent.text = elementProperty.objectReferenceValue.name;
+                CZ_Variable czVarToUse = (CZ_Variable)listProperty.GetArrayElementAtIndex(i).objectReferenceValue;
+                GUIContent eContent0 = new GUIContent();
+                GUIContent eContent1 = new GUIContent();
+                eContent0.text ="Type: "+czVarToUse.variableType.ToString();
+                if(czVarToUse.variableType== CZ_Variable.VarType.Creation)
+                {
+                    eContent1.text = "Model: " + czVarToUse.objectForCreation;
+                }
+                else
+                {
+
+                }
+                gStyle.padding.left = 10;
+                eStyle.padding.left = 25;
+                eStyle.fontSize = 11;
+                int widthInt = 20;
+                int offsetInt = 40;
+                if (showingExtraInfo)
+                {
+                    widthInt = 40;
+                    offsetInt = 45;
+                }
+                else
+                {
+                    widthInt = 20;
+                    offsetInt = 40;
+                }
+                Rect leftRect = new Rect(5, 80+(offsetInt * i), Screen.width-10, widthInt);
+                GUI.Box(leftRect, GUIContent.none);
+                //EditorGUILayout.LabelField(tContent, gStyle);
+                GUI.Label(leftRect,tContent,gStyle);    
+                if(showingExtraInfo)
+                {
+                    Rect eRect = new Rect(leftRect);
+                    eRect.y += 20;
+                    GUI.Label(eRect, eContent0,eStyle);
+                }
+
+                Rect leftButtonRect = leftRect;
+                leftButtonRect.x = (Screen.width / 3)+(Screen.width/3);
+                leftButtonRect.width = Screen.width / 3;
+                GUIStyle bStyle = new GUIStyle("Button");
+                if(GUI.Button(leftButtonRect, "Edit",bStyle))
+                {
+                    SetEdit((CZ_Variable)listProperty.GetArrayElementAtIndex(i).objectReferenceValue);
+                }
+
             }
             EditorGUI.indentLevel--;
         }
+    }
+
+    private void SetEdit(CZ_Variable variable)
+    {
+        editingVariable = true;
+        tempVariable = variable;
     }
 }
