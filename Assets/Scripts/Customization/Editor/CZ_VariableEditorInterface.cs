@@ -97,93 +97,109 @@ public class CZ_VariableEditorInterface : EditorWindow
         if (!makingVariable&& !editingVariable)
         {
            
-            if (GUILayout.Button("Create New Variable"))
+            //if (GUILayout.Button("Create New Variable"))
+            //{
+            //    tempVariable = CreateInstance<CZ_Variable>();
+            //    makingVariable = !makingVariable;
+            //}
+            //aquireInstance.FillVariableList(aquireInstance.variables, "t:CZ_Variable", "");
+            //serializedVarObj = new SerializedObject(aquireInstance); 
+            //ListIterator("variables", ref listVisible, serializedVarObj, subTitleStyle, style0, "Variables", "");
+            //if (!showingExtraInfo)
+            //{
+            //    if (GUI.Button(extraInfoRect, "Show Extra Info"))
+            //    {
+            //        showingExtraInfo = true;
+            //    }
+            //}
+            //else
+            //{
+            //    if(GUI.Button(extraInfoRect,"Hide Extra Info"))
+            //    {
+            //        showingExtraInfo = false;
+            //    }
+            //}
+        }
+        //else
+        //{
+        if(tempVariable==null)
+        {
+            tempVariable = CreateInstance<CZ_Variable>();
+        }
+        tempVariable.variableName = EditorGUILayout.TextField("Variable Name: ", tempVariable.variableName);
+        tempVariable.variableType = (CZ_Variable.VarType)EditorGUILayout.EnumPopup("Variable Type: ",tempVariable.variableType);
+     
+        if(tempVariable.variableType==CZ_Variable.VarType.Creation)
+        {
+            tempVariable.modelSpecific = EditorGUILayout.Toggle("Model Specific?: ", tempVariable.modelSpecific);
+            tempVariable.objectForCreation = (GameObject)EditorGUILayout.ObjectField("Object to Create: ", tempVariable.objectForCreation, typeof(GameObject),false);
+        }
+        else
+        {
+            tempVariable.modelSpecific = true;
+            
+            tempVariable.objectForManipulation = (GameObject)EditorGUILayout.ObjectField("Object to Manipulate: ", tempVariable.objectForManipulation, typeof(GameObject), true);
+            tempVariable.manipulationType = (CZ_Variable.ManipType)EditorGUILayout.EnumPopup("Manipulation Type: ", tempVariable.manipulationType);
+            switch (tempVariable.manipulationType)
             {
-                tempVariable = CreateInstance<CZ_Variable>();
-                makingVariable = !makingVariable;
+                case CZ_Variable.ManipType.Scale:
+                    tempVariable.minManipulation = EditorGUILayout.FloatField("Minimum Value", tempVariable.minManipulation);
+                    tempVariable.maxManipulation = EditorGUILayout.FloatField("Maximum Value", tempVariable.maxManipulation);
+                    break;
+                case CZ_Variable.ManipType.ShapeKey:
+                    tempVariable.minManipulation = EditorGUILayout.FloatField("Minimum Value", tempVariable.minManipulation);
+                    tempVariable.maxManipulation = EditorGUILayout.FloatField("Maximum Value", tempVariable.maxManipulation);
+                    break;
+                case CZ_Variable.ManipType.Color:
+                    tempVariable.colorValue = EditorGUILayout.ColorField("Color Value",tempVariable.colorValue);
+                    break;
+                default:
+                    break;
             }
-            aquireInstance.FillVariableList(aquireInstance.variables, "t:CZ_Variable", "");
-            serializedVarObj = new SerializedObject(aquireInstance); 
-            ListIterator("variables", ref listVisible, serializedVarObj, subTitleStyle, style0, "Variables", "");
-            if (!showingExtraInfo)
+            
+        }
+        tempVariable.wantedSection = (CZ_Section)EditorGUILayout.ObjectField("Wanted Section", tempVariable.wantedSection, typeof(CZ_Section), false);
+        if (tempVariable.variableType==CZ_Variable.VarType.Modification)
+        {
+            if (tempVariable.minManipulation > tempVariable.maxManipulation)
             {
-                if (GUI.Button(extraInfoRect, "Show Extra Info"))
-                {
-                    showingExtraInfo = true;
-                }
+                EditorGUILayout.LabelField("The Minimum value cannot be higher than the Maximum value!!!", errorStyle);
+                return;
             }
-            else
+            if(tempVariable.maxManipulation<tempVariable.minManipulation)
             {
-                if(GUI.Button(extraInfoRect,"Hide Extra Info"))
-                {
-                    showingExtraInfo = false;
-                }
+                EditorGUILayout.LabelField("The Maximum value cannot be lower than the Minimum value!!!", errorStyle);
+                return;
+            }
+        }
+        if (editingVariable)
+        {
+            if(GUILayout.Button("Save!"))
+            {
+                AssetDatabase.SaveAssets();
+                //makingVariable = false;
+                editingVariable = false;
             }
         }
         else
         {
-            if(tempVariable==null)
+            if (GUILayout.Button("Create!"))
             {
-                makingVariable = false;
-                editingVariable = false;
-                return;
-            }
-            tempVariable.variableName = EditorGUILayout.TextField("Variable Name: ", tempVariable.variableName);
-            tempVariable.variableType = (CZ_Variable.VarType)EditorGUILayout.EnumPopup("Variable Type: ",tempVariable.variableType);
-            if(tempVariable.variableType==CZ_Variable.VarType.Creation)
-            {
-                tempVariable.modelSpecific = EditorGUILayout.Toggle("Model Specific?: ", tempVariable.modelSpecific);
-                tempVariable.objectForCreation = (GameObject)EditorGUILayout.ObjectField("Object to Create: ", tempVariable.objectForCreation, typeof(GameObject),false);
-            }
-            else
-            {
-                tempVariable.modelSpecific = true;
-                tempVariable.objectForManipulation = (GameObject)EditorGUILayout.ObjectField("Object to Manipulate: ", tempVariable.objectForManipulation, typeof(GameObject), false);
-                tempVariable.manipulationType = (CZ_Variable.ManipType)EditorGUILayout.EnumPopup("Manipulation Type: ", tempVariable.manipulationType);
-                tempVariable.minManipulation = EditorGUILayout.FloatField("Minimum Value", tempVariable.minManipulation);
-                tempVariable.maxManipulation = EditorGUILayout.FloatField("Maximum Value", tempVariable.maxManipulation);
-            }
-            tempVariable.wantedSection = (CZ_Section)EditorGUILayout.ObjectField("Wanted Section", tempVariable.wantedSection, typeof(CZ_Section), false);
-            if (tempVariable.variableType==CZ_Variable.VarType.Modification)
-            {
-                if (tempVariable.minManipulation > tempVariable.maxManipulation)
-                {
-                    EditorGUILayout.LabelField("The Minimum value cannot be higher than the Maximum value!!!", errorStyle);
-                    return;
-                }
-                if(tempVariable.maxManipulation<tempVariable.minManipulation)
-                {
-                    EditorGUILayout.LabelField("The Maximum value cannot be lower than the Minimum value!!!", errorStyle);
-                    return;
-                }
-            }
-            if (editingVariable)
-            {
-                if(GUILayout.Button("Save!"))
-                {
-                    AssetDatabase.SaveAssets();
-                    //makingVariable = false;
-                    editingVariable = false;
-                }
-            }
-            else
-            {
-                if (GUILayout.Button("Create!"))
-                {
-                    creatorInstance.Create_Variable(tempVariable);
-                    makingVariable = !makingVariable;
-                }
-            }
-            if(GUILayout.Button("Cancel"))
-            {
-                tempVariable = null;
-                if(editingVariable)
-                    editingVariable = false;
-                if(makingVariable)
-                    makingVariable = false;
-                //editingVariable = false;
+                creatorInstance.Create_Variable(tempVariable);
+                makingVariable = !makingVariable;
+                Close();
             }
         }
+        if(GUILayout.Button("Cancel"))
+        {
+            tempVariable = null;
+            if(editingVariable)
+                editingVariable = false;
+            if(makingVariable)
+                makingVariable = false;
+            //editingVariable = false;
+        }
+        //}
   
     }
 
@@ -271,5 +287,9 @@ public class CZ_VariableEditorInterface : EditorWindow
     {
         editingVariable = true;
         tempVariable = variable;
+    }
+    public void StartMaking()
+    {
+        makingVariable = true;
     }
 }

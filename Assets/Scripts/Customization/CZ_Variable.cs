@@ -21,7 +21,8 @@ public class CZ_Variable : ScriptableObject {
     public enum ManipType
     {
         Scale,
-        ShapeKey
+        ShapeKey,
+        Color
     }
 
     public ManipType manipulationType;
@@ -31,6 +32,10 @@ public class CZ_Variable : ScriptableObject {
     public float maxManipulation;
 
     public float minManipulation;
+
+    public Color colorValue;
+
+    public int shapeKeyIndex;
 
     public CZ_Section wantedSection;
 

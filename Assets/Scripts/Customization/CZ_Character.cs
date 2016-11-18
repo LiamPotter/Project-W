@@ -10,6 +10,6 @@ public class CZ_Character : ScriptableObject {
 
     public List<CZ_Variable> variables = new List<CZ_Variable>();
 
-    public GameObject baseModel;
+    public GameObject prefab;
 	
 }

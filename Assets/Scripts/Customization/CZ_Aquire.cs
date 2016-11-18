@@ -54,4 +54,16 @@ public class CZ_Aquire : ScriptableObject {
         czCreatorInstance.characterInstance = characterInstance;
         returnCharacter = characterInstance;
     }
+    public string[] FindCharacterReturnString()
+    {
+
+        string[] tString = UnityEditor.AssetDatabase.FindAssets("t:CZ_Character");
+        string[] stringArray = new string[tString.Length];
+        for (int i = 0; i < tString.Length; i++)
+        {      
+            stringArray[i] = ((CZ_Character)UnityEditor.AssetDatabase.LoadAssetAtPath(UnityEditor.AssetDatabase.GUIDToAssetPath(tString[i]), typeof(CZ_Character))).characterName;
+        }
+        //Debug.Log(stringArray.Length);
+        return stringArray;
+    }
 }

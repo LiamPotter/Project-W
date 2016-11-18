@@ -20,8 +20,9 @@ public class CZ_Creator : ScriptableObject {
         UnityEditor.AssetDatabase.CreateAsset(variable, path);
     }
 
-    public void Create_Section()
+    public void Create_Section(CZ_Section section,string parentPath)
     {
+        UnityEditor.AssetDatabase.CreateAsset(section, parentPath);
 
     }
 	

@@ -12,11 +12,11 @@ public class CZ_CharacterEditorInterface : EditorWindow {
 
     private string characterName;
     private bool creatingCharacter;
-
+    private bool modifyingCharacter;
 
     private GUIStyle titleStyle = new GUIStyle();
-
-
+    string[] charOptions = new string[5];
+    int selected = 0;
     [MenuItem("Customization/Character Interface")]
     public static void ShowWindow()
     {
@@ -50,69 +50,57 @@ public class CZ_CharacterEditorInterface : EditorWindow {
         GUILayout.Label("Character Editor", titleStyle);
         if (characterInstance == null)
         {
-            if (GUILayout.Button("Find Character"))
-            {
-                Find_Character();
-            }
-            if (!creatingCharacter)
-            { 
-                if (GUILayout.Button("Create New Character"))
-                {
-                    creatingCharacter = true;
-                    //UnityEditor.EditorUtility.SaveFolderPanel();
-                }              
-            }
-            if(creatingCharacter)
-            {
-                Name_Character();
-                if (characterName != null)
-                    if (characterName.Length>0f)
-                        if(GUILayout.Button("Save Character"))
-                        {
-                            Save_Character();
-                        }
-                if (GUILayout.Button("Cancel"))
-                    creatingCharacter = false;
-            }
+            charOptions = aquireInstance.FindCharacterReturnString();
+            selected = EditorGUILayout.Popup("Switch Character", selected, charOptions);
+            characterName = charOptions[selected];
+            if (characterInstance == null)
+                SetCharacterFromName();
+            if (characterInstance.characterName != characterName)
+                SetCharacterFromName();
         }
-        else
+        GUILayout.Label("Currently viewing " + characterInstance.characterName, titleStyle);
+        if (!creatingCharacter&&!modifyingCharacter)
         {
-            GUILayout.Label("Currently viewing " + characterInstance.characterName, titleStyle);
-            EditorGUILayout.Separator();
-            characterInstance.baseModel = (GameObject)EditorGUILayout.ObjectField("Base Model",characterInstance.baseModel, typeof(GameObject),false);
-            EditorGUILayout.Space();
+            if (GUILayout.Button("Create New Character"))
+            {
+                creatingCharacter = true;
+            }
+            if (GUILayout.Button("Edit Character"))
+            {
+                modifyingCharacter = true;             
+            }
+
+            charOptions = aquireInstance.FindCharacterReturnString();
+            selected = EditorGUILayout.Popup("Switch Character", selected, charOptions);
+            characterName = charOptions[selected];
+            if (characterInstance.characterName != characterName)
+                SetCharacterFromName();
+
+            characterInstance.prefab = (GameObject)EditorGUILayout.ObjectField("Prefab", characterInstance.prefab, typeof(GameObject), false);
+
 
             #region Variables
 
             #region Left Rect
-            Rect leftRect = new Rect(0, 100, Screen.width / 2-5, Screen.height);
+            Rect leftRect = new Rect(0, 150, Screen.width / 2 - 5, Screen.height);
             GUIStyle leftStyle = new GUIStyle();
             Texture2D leftTexture = new Texture2D((int)leftRect.width, (int)leftRect.height);
             Color[] leftColors = new Color[1];
             leftColors[0] = Color.grey;
             //leftTexture.SetPixels(leftColors);
-            leftStyle.normal.background =leftTexture ;
-            GUI.Box(leftRect, "",leftStyle);
+            leftStyle.normal.background = leftTexture;
+            GUI.Box(leftRect, "", leftStyle);
             GUILayout.BeginArea(leftRect);
-            GUILayout.Label("Variables", titleStyle);
-            if(GUILayout.Button("Find Variables"))
+            GUILayout.Label("Sections", titleStyle);
+            if(GUILayout.Button("Create New Section"))
             {
-                //string entirePath = EditorUtility.OpenFolderPanel("Variables Folder", "/Assets/Resources/Customization/Variables/", "");
-                //string relativepath = "Assets" + entirePath.Substring(Application.dataPath.Length);
-                //aquireInstance.foldersToSearch.Add(relativepath);
-                aquireInstance.folderToSearch = "Assets/Resources/Customization/Variables/";
-                aquireInstance.Aquire_Variables();
+
             }
-            if(GUILayout.Button("Create New Variable"))
-            {
-                CZ_VariableEditorInterface.ShowWindow();
-            }
-         
             GUILayout.EndArea();
             #endregion
 
             #region Right Rect
-            Rect rightRect = new Rect(Screen.width / 2 + 5, 100, Screen.width / 2, Screen.height);
+            Rect rightRect = new Rect(Screen.width / 2 + 5, 150, (Screen.width / 2) - 10, Screen.height);
             GUIStyle rightStyle = new GUIStyle();
             Texture2D rightTexture = new Texture2D((int)rightRect.width, (int)rightRect.height);
             Color[] rightColors = new Color[1];
@@ -121,7 +109,12 @@ public class CZ_CharacterEditorInterface : EditorWindow {
             rightStyle.normal.background = rightTexture;
             GUI.Box(rightRect, "", rightStyle);
             GUILayout.BeginArea(rightRect);
-            GUILayout.Label("Sections", titleStyle);
+            GUILayout.Label("Variables", titleStyle);
+            if (GUILayout.Button("Create New Variable"))
+            {
+                CZ_VariableEditorInterface.ShowWindow();
+
+            }
             GUILayout.EndArea();
             #endregion
 
@@ -131,6 +124,32 @@ public class CZ_CharacterEditorInterface : EditorWindow {
             }
             #endregion
         }
+        if (creatingCharacter)
+        {
+            characterInstance = CreateInstance<CZ_Character>();
+            Name_Character();
+            if (characterName != null)
+                if (characterName.Length > 0f)
+                    if (GUILayout.Button("Save Character"))
+                    {
+                        Save_Character();
+                        creatingCharacter = false;
+                    }
+            if (GUILayout.Button("Cancel"))
+                creatingCharacter = false;
+        }
+        if(modifyingCharacter)
+        {
+           
+            if (GUILayout.Button("Save Character"))
+            {
+                AssetDatabase.SaveAssets();
+                modifyingCharacter = false;
+            }
+            if (GUILayout.Button("Cancel"))
+                modifyingCharacter = false;
+        }
+        
     }
 
     private void Name_Character()
@@ -150,7 +169,11 @@ public class CZ_CharacterEditorInterface : EditorWindow {
         aquireInstance.Find_Character(creatorInstance, characterInstance);
         characterInstance = aquireInstance.characterInstance;
     }
-
+    private void SetCharacterFromName()
+    {
+        string path = "Assets/Resources/Customization/Characters/" + characterName + ".asset";
+        characterInstance = (CZ_Character)AssetDatabase.LoadAssetAtPath(path, typeof(CZ_Character));
+    }
     public void ListIterator(string propertyPath, ref bool visible, SerializedObject serializedObject, GUIStyle style, string title, string type)
     {
         SerializedProperty listProperty = serializedObject.FindProperty(propertyPath);
