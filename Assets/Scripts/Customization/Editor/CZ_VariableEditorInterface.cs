@@ -18,6 +18,8 @@ public class CZ_VariableEditorInterface : EditorWindow
     SerializedProperty serProperty;
     bool listVisible = true;
 
+    public CZ_Character charInstance;
+
     private Rect extraInfoRect;
 
     private bool showingExtraInfo;
@@ -26,7 +28,7 @@ public class CZ_VariableEditorInterface : EditorWindow
 
     public bool editingVariable;
 
-    private CZ_Variable tempVariable;
+    public CZ_Variable tempVariable;
 
     private GUIStyle titleStyle = new GUIStyle();
 
@@ -35,7 +37,9 @@ public class CZ_VariableEditorInterface : EditorWindow
     private GUIStyle errorStyle = new GUIStyle();
 
     private GUIStyle style0 = new GUIStyle();
-
+    string[] secOptions = new string[5];
+    int selected = 0;
+    private string sectionName;
     [MenuItem("Customization/Variable Interface")]
     public static void ShowWindow()
     {
@@ -158,7 +162,17 @@ public class CZ_VariableEditorInterface : EditorWindow
             }
             
         }
-        tempVariable.wantedSection = (CZ_Section)EditorGUILayout.ObjectField("Wanted Section", tempVariable.wantedSection, typeof(CZ_Section), false);
+        //tempVariable.wantedSection = (CZ_Section)EditorGUILayout.ObjectField("Wanted Section", tempVariable.wantedSection, typeof(CZ_Section), false);
+        secOptions = aquireInstance.Aquire_SectionsFromCharacter(charInstance);
+        if (secOptions.Length > 0)
+        {
+            selected = EditorGUILayout.Popup("Section", selected, secOptions);
+            sectionName = secOptions[selected];
+            if (tempVariable.wantedSection == null)
+                SetSectionFromNull();
+            if(tempVariable.wantedSection.name!=sectionName)
+                SetSectionFromName();
+        }
         if (tempVariable.variableType==CZ_Variable.VarType.Modification)
         {
             if (tempVariable.minManipulation > tempVariable.maxManipulation)
@@ -185,9 +199,9 @@ public class CZ_VariableEditorInterface : EditorWindow
         {
             if (GUILayout.Button("Create!"))
             {
-                creatorInstance.Create_Variable(tempVariable);
+                creatorInstance.Create_Variable(tempVariable,tempVariable.wantedSection);
                 makingVariable = !makingVariable;
-                Close();
+                //Close();
             }
         }
         if(GUILayout.Button("Cancel"))
@@ -197,15 +211,19 @@ public class CZ_VariableEditorInterface : EditorWindow
                 editingVariable = false;
             if(makingVariable)
                 makingVariable = false;
+            Close();
             //editingVariable = false;
         }
         //}
   
     }
-
-    private void CalculateStuff()
+    private void SetSectionFromNull()
     {
-
+        tempVariable.wantedSection = charInstance.sections[0];
+    }
+    private void SetSectionFromName()
+    {
+        tempVariable.wantedSection = charInstance.sections[selected];
     }
 
     private void ListIterator(string propertyPath, ref bool visible, SerializedObject serializedObject,GUIStyle titleStyle, GUIStyle style, string title, string type)

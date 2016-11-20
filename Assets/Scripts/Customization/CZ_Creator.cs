@@ -14,16 +14,36 @@ public class CZ_Creator : ScriptableObject {
     public bool creating;
 
 
-    public void Create_Variable(CZ_Variable variable)
+    public void Create_Variable(CZ_Variable variable,CZ_Section section)
     {
-        string path = "Assets/Resources/Customization/Variables/" + variable.variableName + ".asset";
-        UnityEditor.AssetDatabase.CreateAsset(variable, path);
+        //string path = "Assets/Resources/Customization/Variables/" + variable.variableName + ".asset";
+        //UnityEditor.AssetDatabase.CreateAsset(variable, path);
+        
+        section.variablesUsingThisSection.Add(variable);
+        section.character.variables.Add(variable);
+        //variable.name = variable.variableName;
+
+        //string path = UnityEditor.AssetDatabase.GetAssetPath(section);
+        //UnityEditor.AssetDatabase.AddObjectToAsset(variable, path);
+        //variable.name = variable.variableName;
+        //UnityEditor.AssetDatabase.ImportAsset(UnityEditor.AssetDatabase.GetAssetPath(variable));
+        //UnityEditor.AssetDatabase.Refresh();
     }
 
-    public void Create_Section(CZ_Section section,string parentPath)
+    public void Create_Section(CZ_Section section,CZ_Character character)
     {
-        UnityEditor.AssetDatabase.CreateAsset(section, parentPath);
-
+        string path = UnityEditor.AssetDatabase.GetAssetPath(character);
+        CZ_Section tSec = CreateInstance<CZ_Section>();
+        tSec = section;
+        tSec.character = character;
+    
+        tSec.name = "z" + tSec.sectionName;
+        UnityEditor.AssetDatabase.AddObjectToAsset(tSec, path);
+        UnityEditor.AssetDatabase.ImportAsset(UnityEditor.AssetDatabase.GetAssetPath(tSec));
+        tSec.hideFlags = HideFlags.HideInInspector;
+        character.sections.Add(tSec);
+        //UnityEditor.AssetDatabase.Refresh();
+        //Debug.Log(tempSection.name);
     }
 	
 }
